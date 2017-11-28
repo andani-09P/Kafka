@@ -1,0 +1,23 @@
+###########################Start Zookeeper Server
+bin/zookeeper-server-start.sh config/zookeeper.properties
+./zookeeper-server-start.sh /usr/local/zookeeper-3.4.6/conf/zoo.cfg &
+
+##########################In a different terminal start Kafka Server
+bin/kafka-server-start.sh config/server.properties
+
+##############kafka toipc
+bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic FirstTest
+
+##################view content
+bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic kafka1 --from-beginning
+
+
+######################view content
+bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic test3 --from-beginning
+
+
+ ./kafka-topics.sh -zookeeper andani-VirtualBox:2181 -list
+
+
+################write in kafka topic
+/kafka-console-producer.sh --broker-list nikilesh-Lenovo-B41-80:9092 --topic FirstTest 
