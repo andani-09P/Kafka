@@ -1,0 +1,80 @@
+ tier1.sources  = source1
+ tier1.channels = channel1
+ tier1.sinks = sink1
+
+ tier1.sources.source1.type = org.apache.flume.source.kafka.KafkaSource
+ tier1.sources.source1.zookeeperConnect = localhost:2181
+ tier1.sources.source1.topic = LiveTweets
+ tier1.sources.source1.groupId = flume
+ tier1.sources.source1.channels = channel1
+ tier1.sources.source1.interceptors = i1
+ tier1.sources.source1.interceptors.i1.type = timestamp
+ tier1.sources.source1.kafka.consumer.timeout.ms = 100
+
+ tier1.channels.channel1.type = memory
+ tier1.channels.channel1.capacity = 10000
+ tier1.channels.channel1.transactionCapacity = 1000
+
+ tier1.sinks.sink1.type = hdfs
+ tier1.sinks.sink1.hdfs.path = /tmp/kafka/%{topic}/%y-%m-%d
+ tier1.sinks.sink1.hdfs.rollInterval = 0
+ tier1.sinks.sink1.hdfs.rollSize = 134217728
+ tier1.sinks.sink1.hdfs.rollCount = 0
+ tier1.sinks.sink1.hdfs.idleTimeout = 3600
+ tier1.sinks.sink1.hdfs.fileType = DataStream
+ tier1.sinks.sink1.channel = channel1
+#############3
+# Number of seconds to wait before rolling current file (in seconds)
+
+agent.sinks.sink.hdfs.rollInterval=0
+
+# File size to trigger roll, in bytes (256Mb)
+
+agent.sinks.sink.hdfs.rollSize = 268435456
+
+agent.sinks.sink.hdfs.rollCount = 0
+
+# Timeout after which inactive files get closed (in seconds) agent.sinks.sink.hdfs.idleTimeout = 3600
+
+
+######################
+./flume-ng agent -n tier1 -f /home/rohit/apache-flume-1.7.0-bin/conf/
+
+##########################
+https://www.cloudera.com/documentation/kafka/latest/topics/kafka_flume.html
+#######################
+
+
+
+
+
+
+TwitterAgent.sources = Twitter 
+TwitterAgent.channels = MemChannel 
+TwitterAgent.sinks = HDFS
+  
+# Describing/Configuring the source 
+TwitterAgent.sources.Twitter.type = org.apache.flume.source.twitter.TwitterSource
+TwitterAgent.sources.Twitter.consumerKey=ncFbTHYURQleaVYgqiYwtqpZW
+TwitterAgent.sources.Twitter.consumerSecret=uk80rbtT2DyLgIXDl1eoM7BnkRsGa8jw1czpj5aTBqNFY88nFH
+TwitterAgent.sources.Twitter.accessToken=2650657855-m9TZ2pxCnuuJSNJC2JDGGVOGEpx7DMX9p6KXCjB
+TwitterAgent.sources.Twitter.accessTokenSecret=dNQ0bg9Cqb7dYPAoKbZ1QhCVNcWH6NlsIlFmrfwwq431I
+TwitterAgent.sources.Twitter.keywords= #indvspak ,#indvpak, #pakvsindia, #pakvindia
+# Describing/Configuring the sink 
+
+TwitterAgent.sinks.HDFS.channel=MemChannel
+TwitterAgent.sinks.HDFS.type=hdfs
+TwitterAgent.sinks.HDFS.hdfs.path=hdfs://localhost:9000/user/flume/tweets
+TwitterAgent.sinks.HDFS.hdfs.fileType=DataStream
+TwitterAgent.sinks.HDFS.hdfs.writeformat=Text
+TwitterAgent.sinks.HDFS.hdfs.batchSize=1000
+TwitterAgent.sinks.HDFS.hdfs.rollSize=0
+TwitterAgent.sinks.HDFS.hdfs.rollCount=10000
+TwitterAgent.sinks.HDFS.hdfs.rollInterval=600
+
+TwitterAgent.channels.MemChannel.type=memory
+TwitterAgent.channels.MemChannel.capacity=10000
+TwitterAgent.channels.MemChannel.transactionCapacity=1000
+
+TwitterAgent.sources.Twitter.channels = MemChannel
+TwitterAgent.sinks.HDFS.channel = MemChannel
